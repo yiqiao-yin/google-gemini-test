@@ -22,7 +22,7 @@ def convert_image_to_base64(image):
     return base64.b64encode(buffered.getvalue()).decode()
 
 # Function to make an API call to Google's Gemini API
-def call_gemini_api(image_base64, api_key):
+def call_gemini_api(image_base64, api_key, prompt="What is this picture?"):
     headers = {
         'Content-Type': 'application/json',
     }
@@ -30,7 +30,7 @@ def call_gemini_api(image_base64, api_key):
         "contents": [
             {
                 "parts": [
-                    {"text": "What is this picture?"},
+                    {"text": prompt},
                     {
                         "inline_data": {
                             "mime_type": "image/jpeg",
@@ -47,6 +47,7 @@ def call_gemini_api(image_base64, api_key):
         json=data
     )
     return response.json()
+
 
 # Main function of the Streamlit app
 def main():
