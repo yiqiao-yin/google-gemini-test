@@ -51,17 +51,7 @@ def call_gemini_api(image_base64, api_key, prompt="What is this picture?"):
 
 def safely_get_text(response):
     try:
-        # Using the get method to safely access nested dictionaries
-        candidates = response.get("candidates", [])
-        if candidates:
-            first_candidate = candidates[0]
-            content = first_candidate.get("content")
-            if content:
-                parts = content.get("parts", [])
-                if parts:
-                    text = parts[0].get("text")
-                    if text is not None:
-                        return text
+        response
     except Exception as e:
         print(f"An error occurred: {e}")
 
