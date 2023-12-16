@@ -133,11 +133,6 @@ def main():
                             "content"
                         ]["parts"][0]["text"]
                         st.write("Gemini:", updated_ans)
-                    else:
-                        # Handle the case where the text does not exist
-                        st.write(
-                            "Gemini:", "No output found. Please ask another question."
-                        )
 
             else:
                 st.write("No response from API.")
