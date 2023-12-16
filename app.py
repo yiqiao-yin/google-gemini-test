@@ -49,6 +49,26 @@ def call_gemini_api(image_base64, api_key, prompt="What is this picture?"):
     return response.json()
 
 
+def safely_get_text(response):
+    try:
+        # Using the get method to safely access nested dictionaries
+        candidates = response.get("candidates", [])
+        if candidates:
+            first_candidate = candidates[0]
+            content = first_candidate.get("content")
+            if content:
+                parts = content.get("parts", [])
+                if parts:
+                    text = parts[0].get("text")
+                    if text is not None:
+                        return text
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    # Return None or a default value if the path does not exist
+    return None
+
+
 # Main function of the Streamlit app
 def main():
     st.title("Image Capture, Analysis and Save Application")
@@ -112,13 +132,22 @@ def main():
                     updated_text_from_response = call_gemini_api(
                         image_base64, api_key, prompt=input_prompt
                     )
-                    if updated_text_from_response["candidates"][0]["content"]["parts"][
-                        0
-                    ]["text"]:
+
+                    updated_text_from_response = updated_text_from_response[
+                        "candidates"
+                    ][0]["content"]["parts"][0]["text"]
+                    text = safely_get_text(updated_text_from_response)
+                    if text is not None:
+                        # Do something with the text
                         updated_ans = updated_text_from_response["candidates"][0][
                             "content"
                         ]["parts"][0]["text"]
                         st.write("Gemini:", updated_ans)
+                    else:
+                        # Handle the case where the text does not exist
+                        st.write(
+                            "Gemini:", "No output found. Please ask another question."
+                        )
 
             else:
                 st.write("No response from API.")
