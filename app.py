@@ -53,7 +53,7 @@ def main():
     st.title("Image Capture, Analysis and Save Application")
 
     # Streamlit widget to capture an image from the user's webcam
-    image = st.camera_input("Take a picture")
+    image = st.sidebar.camera_input("Take a picture")
 
     if image is not None:
         # Display the captured image
