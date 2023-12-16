@@ -101,6 +101,15 @@ def main():
             if response['candidates'][0]['content']['parts'][0]['text']:
                 text_from_response = response['candidates'][0]['content']['parts'][0]['text']
                 st.write(text_from_response)
+
+                # Text input for the question
+                input_prompt = st.text_input("Type your question here:")
+            
+                # Display the entered question
+                if input_prompt:
+                    updated_text_from_response = call_gemini_api(image_base64, api_key, prompt=input_prompt)
+                    st.write("Gemini:", updated_text_from_response )
+
             else:
                 st.write("No response from API.")
         else:
