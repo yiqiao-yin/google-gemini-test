@@ -1,0 +1,5 @@
+streamlit
+PIL
+io
+requests
+os
