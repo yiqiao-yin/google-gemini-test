@@ -118,8 +118,7 @@ def main():
                         updated_ans = updated_text_from_response["candidates"][0][
                             "content"
                         ]["parts"][0]["text"]
-                        st.write("Gemini:")
-                        st.markdown(updated_ans)
+                        st.write("Gemini:", updated_ans)
 
             else:
                 st.write("No response from API.")
