@@ -1,9 +1,11 @@
+import base64
+import io
+import os
+
+import requests
 import streamlit as st
 from PIL import Image
-import io
-import base64
-import requests
-import os
+
 
 # Function to convert the image to bytes for download
 def convert_image_to_bytes(image):
@@ -11,9 +13,11 @@ def convert_image_to_bytes(image):
     image.save(buffered, format="JPEG")
     return buffered.getvalue()
 
+
 # Function to resize the image
 def resize_image(image):
     return image.resize((512, int(image.height * 512 / image.width)))
+
 
 # Function to convert the image to base64
 def convert_image_to_base64(image):
@@ -21,30 +25,26 @@ def convert_image_to_base64(image):
     image.save(buffered, format="JPEG")
     return base64.b64encode(buffered.getvalue()).decode()
 
+
 # Function to make an API call to Google's Gemini API
 def call_gemini_api(image_base64, api_key, prompt="What is this picture?"):
     headers = {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
     }
     data = {
         "contents": [
             {
                 "parts": [
                     {"text": prompt},
-                    {
-                        "inline_data": {
-                            "mime_type": "image/jpeg",
-                            "data": image_base64
-                        }
-                    }
+                    {"inline_data": {"mime_type": "image/jpeg", "data": image_base64}},
                 ]
             }
         ]
     }
     response = requests.post(
-        f'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key={api_key}',
+        f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key={api_key}",
         headers=headers,
-        json=data
+        json=data,
     )
     return response.json()
 
@@ -81,7 +81,7 @@ def main():
 
     if image is not None:
         # Display the captured image
-        st.image(image, caption='Captured Image', use_column_width=True)
+        st.image(image, caption="Captured Image", use_column_width=True)
 
         # Convert the image to PIL format and resize
         pil_image = Image.open(image)
@@ -98,22 +98,33 @@ def main():
             response = call_gemini_api(image_base64, api_key)
 
             # Display the response
-            if response['candidates'][0]['content']['parts'][0]['text']:
-                text_from_response = response['candidates'][0]['content']['parts'][0]['text']
+            if response["candidates"][0]["content"]["parts"][0]["text"]:
+                text_from_response = response["candidates"][0]["content"]["parts"][0][
+                    "text"
+                ]
                 st.write(text_from_response)
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:")
-            
+
                 # Display the entered question
                 if input_prompt:
-                    updated_text_from_response = call_gemini_api(image_base64, api_key, prompt=input_prompt)
-                    st.write("Gemini:", updated_text_from_response )
+                    updated_text_from_response = call_gemini_api(
+                        image_base64, api_key, prompt=input_prompt
+                    )
+                    if updated_text_from_response["candidates"][0]["content"]["parts"][
+                        0
+                    ]["text"]:
+                        updated_ans = updated_text_from_response["candidates"][0][
+                            "content"
+                        ]["parts"][0]["text"]
+                        st.write("Gemini:", updated_ans)
 
             else:
                 st.write("No response from API.")
         else:
             st.write("API Key is not set. Please set the API Key.")
+
 
 if __name__ == "__main__":
     main()
