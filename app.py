@@ -53,7 +53,30 @@ def main():
     st.title("Image Capture, Analysis and Save Application")
 
     # Streamlit widget to capture an image from the user's webcam
-    image = st.sidebar.camera_input("Take a picture")
+    image = st.sidebar.camera_input("Take a picture 📸")
+
+    # Add instruction
+    st.sidebar.markdown(
+        """
+            # 🌟 How to Use the App 🌟
+
+            Follow these simple steps to interact with the app and have a chat with Gemini about your picture:
+
+            1. **Capture a Moment** 📸
+            - Go to the **sidebar**.
+            - Click on **"Take a picture"** to capture an image using your webcam.
+
+            2. **Gemini's Insight** 🔮
+            - Once you've taken a picture, just wait a moment.
+            - See what **Google's Gemini** AI has to say about your photo as the app processes it.
+
+            3. **Chat with Gemini** 💬
+            - Feel free to ask questions or start a conversation about the picture you just took.
+            - Let's see what interesting stories Gemini can tell you!
+
+            Enjoy exploring and have fun! 😄🎉
+        """
+    )
 
     if image is not None:
         # Display the captured image
