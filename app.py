@@ -176,8 +176,15 @@ def main():
             }
             result_dict = post_request_and_parse_response(url, payload)
             output_data = extract_line_items(result_dict)
-            st.write(result_dict)
-            st.table(pd.DataFrame(output_data))
+            df = pd.DataFrame(output_data)
+
+            # Using an expander to hide the json
+            with st.expander("Show/Hide Raw Json"):
+                st.write(result_dict)
+
+            # Using an expander to hide the table
+            with st.expander("Show/Hide Table"):
+                st.table(df)
 
         # API Key (You should set this in your environment variables)
         api_key = st.secrets["PALM_API_KEY"]
