@@ -1,14 +1,13 @@
 import base64
 import io
+import json
 import os
+from typing import Any, Dict, List
 
-import requests
 import pandas as pd
+import requests
 import streamlit as st
 from PIL import Image
-
-import json
-from typing import Dict, Any, List
 
 
 # Function to convert the image to bytes for download
@@ -63,9 +62,11 @@ def safely_get_text(response):
     return None
 
 
-def post_request_and_parse_response(url: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+def post_request_and_parse_response(
+    url: str, payload: Dict[str, Any]
+) -> Dict[str, Any]:
     """
-    Sends a POST request to the specified URL with the given payload, 
+    Sends a POST request to the specified URL with the given payload,
     then parses the byte response to a dictionary.
 
     Args:
@@ -76,7 +77,7 @@ def post_request_and_parse_response(url: str, payload: Dict[str, Any]) -> Dict[s
     Dict[str, Any]: The parsed dictionary from the response.
     """
     # Set headers for the POST request
-    headers = {'Content-Type': 'application/json'}
+    headers = {"Content-Type": "application/json"}
 
     # Send the POST request and get the response
     response = requests.post(url, json=payload, headers=headers)
@@ -85,7 +86,7 @@ def post_request_and_parse_response(url: str, payload: Dict[str, Any]) -> Dict[s
     byte_data = response.content
 
     # Decode the byte data to a string
-    decoded_string = byte_data.decode('utf-8')
+    decoded_string = byte_data.decode("utf-8")
 
     # Convert the JSON string to a dictionary
     dict_data = json.loads(decoded_string)
@@ -133,7 +134,6 @@ def main():
         # Create a file uploader in the sidebar
         image = st.sidebar.file_uploader("Upload a JPG image", type=["jpg"])
 
-
     # Add instruction
     st.sidebar.markdown(
         """
@@ -171,9 +171,7 @@ def main():
         # OCR by API Call of AWS Textract via Post Method
         if input_method == "Upload":
             url = "https://2tsig211e0.execute-api.us-east-1.amazonaws.com/my_textract"
-            payload = {
-                "image": image_base64
-            }
+            payload = {"image": image_base64}
             result_dict = post_request_and_parse_response(url, payload)
             output_data = extract_line_items(result_dict)
             df = pd.DataFrame(output_data)
@@ -201,14 +199,7 @@ def main():
                 st.write(text_from_response)
 
                 # Text input for the question
-                if input_method == "Upload":
-                    input_prompt = st.text_input(
-                        f"""Simplified output from OCR from the image in this data:
-                        {output_data}
-                        """
-                    )
-                else:
-                    input_prompt = st.text_input("Type your question here:")
+                input_prompt = st.text_input("Type your question here:")
 
                 # Display the entered question
                 if input_prompt:
@@ -231,7 +222,7 @@ def main():
                 st.write("No response from API.")
         else:
             st.write("API Key is not set. Please set the API Key.")
-        
+
 
 if __name__ == "__main__":
     main()
