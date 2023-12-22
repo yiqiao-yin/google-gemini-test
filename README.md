@@ -47,6 +47,8 @@ This is left optional. The raw output from **OCR** is a big *.json* file and the
 
 The #TODO item here is dependent on the next step of the use case. Every use case is different. The use cases can be document processing, medical form creation, clinical trial protocols, and so on. For now, we leave it as #TODO because we do not have a particular use case to follow. When a use case and its schema is defined, the code in this project can be used as a first step to deliver the *OCR* output for next step usage. 
 
+Another #TODO item is the deployment on **EC2** which is not done here due to its costly expense. However, in practice, a concept such as this can be put on **EC2** and an IP address can be set up using **VPN** for proprietary application. 
+
 ## Getting Started 🚀
 
 To embark on this journey of photographic analysis, you'll need to follow these simple steps:
