@@ -6,6 +6,9 @@ import requests
 import streamlit as st
 from PIL import Image
 
+import json
+from typing import Dict, Any
+
 
 # Function to convert the image to bytes for download
 def convert_image_to_bytes(image):
@@ -59,12 +62,50 @@ def safely_get_text(response):
     return None
 
 
+def post_request_and_parse_response(url: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Sends a POST request to the specified URL with the given payload, 
+    then parses the byte response to a dictionary.
+
+    Args:
+    url (str): The URL to which the POST request is sent.
+    payload (Dict[str, Any]): The payload to send in the POST request.
+
+    Returns:
+    Dict[str, Any]: The parsed dictionary from the response.
+    """
+    # Set headers for the POST request
+    headers = {'Content-Type': 'application/json'}
+
+    # Send the POST request and get the response
+    response = requests.post(url, json=payload, headers=headers)
+
+    # Extract the byte data from the response
+    byte_data = response.content
+
+    # Decode the byte data to a string
+    decoded_string = byte_data.decode('utf-8')
+
+    # Convert the JSON string to a dictionary
+    dict_data = json.loads(decoded_string)
+
+    return dict_data
+
+
 # Main function of the Streamlit app
 def main():
     st.title("Image Capture, Analysis and Save Application")
 
-    # Streamlit widget to capture an image from the user's webcam
-    image = st.sidebar.camera_input("Take a picture 📸")
+    # Dropdown for user to choose the input method
+    input_method = st.sidebar.selectbox("Choose input method:", ["Camera", "Upload"])
+
+    if input_method == "Camera":
+        # Streamlit widget to capture an image from the user's webcam
+        image = st.sidebar.camera_input("Take a picture 📸")
+    elif input_method == "Upload":
+        # Create a file uploader in the sidebar
+        image = st.sidebar.file_uploader("Upload a JPG image", type=["jpg"])
+
 
     # Add instruction
     st.sidebar.markdown(
@@ -138,6 +179,14 @@ def main():
                 st.write("No response from API.")
         else:
             st.write("API Key is not set. Please set the API Key.")
+        
+        if input_method == "Upload":
+            url = "https://2tsig211e0.execute-api.us-east-1.amazonaws.com/my_textract"
+            payload = {
+                "image": image_base64
+            }
+            result_dict = post_request_and_parse_response(url, payload)
+            st.write(result_dict)
 
 
 if __name__ == "__main__":
