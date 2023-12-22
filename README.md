@@ -23,9 +23,6 @@ graph LR
     E --> F
     F --> G[Vector Database]
     G --> H[Question-Answer Chatbot]
-
-    classDef default fill:#f9f,stroke:#333,stroke-width:2px;
-    class A,B,C,D,E,F,G,H default;
 ```
 
 Explanation of the Diagram:
