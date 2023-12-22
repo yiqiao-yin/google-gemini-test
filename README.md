@@ -11,7 +11,7 @@ This application isn't just your run-of-the-mill photo app. Oh no, it's much mor
 - **Analyze with AI**: Send your image to the mystical realms of Google's Gemini API and get insightful texts about your picture. 🤖🔍
 - **Download & Share**: Save your amazing findings and share them with the world! 🌍
 
-## System Diagram
+## Main Diagram
 
 ```mermaid
 graph LR
@@ -35,7 +35,17 @@ Explanation of the Diagram:
 - **G**: Vector database created from the data hub.
 - **H**: Final stage where the information is used in a question-answer chatbot.
 
-In your Markdown file, this Mermaid diagram will visually represent the flow of data in your workflow from left to right. Each step is connected to show how the data moves through different stages and gets transformed into the final output for the chatbot.
+### System Architect (AWS)
+
+The AWS module from the above main diagram can be presented using the following system architect. This is a demontration only as in practice the modules could be changed. The system architect proposes a workflow for user to interact with **Textract** using **API Gateway**. The **API Gateway** points to a **Lambda** function using a *POST* method. When making the API call, the user sends a **base64** encoded image as part of the payload (e.g. can be a *.json* file). The payload is sent to the **Lambda** function where it is fed into **Textract** as input arguments. The **Lambda** function returns the [OCR](https://en.wikipedia.org/wiki/Optical_character_recognition) output from **Textract** and the output is passed back to the user via the **API**. 
+
+![image](figs/system-architect.png)
+
+#### TODO
+
+This is left optional. The raw output from **OCR** is a big *.json* file and the important information is usually saved inside, notified by "BlockType": "LINE", of which we can use to extract actual useful information along with *width*, *height*, *left*, and *top* to mark its location in the document. 
+
+The #TODO item here is dependent on the next step of the use case. Every use case is different. The use cases can be document processing, medical form creation, clinical trial protocols, and so on. For now, we leave it as #TODO because we do not have a particular use case to follow. When a use case and its schema is defined, the code in this project can be used as a first step to deliver the *OCR* output for next step usage. 
 
 ## Getting Started 🚀
 
