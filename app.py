@@ -116,7 +116,12 @@ def main():
 
             1. **Capture a Moment** 📸
             - Go to the **sidebar**.
-            - Click on **"Take a picture"** to capture an image using your webcam.
+            - Use dropdown selection to **"Take a picture"** to capture an image using your webcam or **"Upload a file"** from your computer.
+
+            ```mermaid
+            graph LR
+                A --> B
+            ```
 
             2. **Gemini's Insight** 🔮
             - Once you've taken a picture, just wait a moment.
