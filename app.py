@@ -118,11 +118,6 @@ def main():
             - Go to the **sidebar**.
             - Use dropdown selection to **"Take a picture"** to capture an image using your webcam or **"Upload a file"** from your computer.
 
-            ```mermaid
-            graph LR
-                A --> B
-            ```
-
             2. **Gemini's Insight** 🔮
             - Once you've taken a picture, just wait a moment.
             - See what **Google's Gemini** AI has to say about your photo as the app processes it.
@@ -146,6 +141,15 @@ def main():
         # Convert the resized image to base64
         image_base64 = convert_image_to_base64(resized_image)
 
+        # OCR by API Call of AWS Textract via Post Method
+        if input_method == "Upload":
+            url = "https://2tsig211e0.execute-api.us-east-1.amazonaws.com/my_textract"
+            payload = {
+                "image": image_base64
+            }
+            result_dict = post_request_and_parse_response(url, payload)
+            st.write(result_dict)
+
         # API Key (You should set this in your environment variables)
         api_key = st.secrets["PALM_API_KEY"]
 
@@ -161,7 +165,14 @@ def main():
                 st.write(text_from_response)
 
                 # Text input for the question
-                input_prompt = st.text_input("Type your question here:")
+                if input_method == "Upload":
+                    input_prompt = st.text_input(
+                        f"""Output from OCR from the image in this data:
+                        {result_dict}
+                        """
+                    )
+                else:
+                    input_prompt = st.text_input("Type your question here:")
 
                 # Display the entered question
                 if input_prompt:
@@ -185,14 +196,6 @@ def main():
         else:
             st.write("API Key is not set. Please set the API Key.")
         
-        if input_method == "Upload":
-            url = "https://2tsig211e0.execute-api.us-east-1.amazonaws.com/my_textract"
-            payload = {
-                "image": image_base64
-            }
-            result_dict = post_request_and_parse_response(url, payload)
-            st.write(result_dict)
-
 
 if __name__ == "__main__":
     main()
