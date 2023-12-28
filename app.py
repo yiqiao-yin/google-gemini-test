@@ -200,6 +200,11 @@ def main():
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:")
+                input_prompt = str(
+                    f"""
+                        Question: {input_prompt} and additional information can be found here: {df}
+                    """
+                )
 
                 # Display the entered question
                 if input_prompt:
