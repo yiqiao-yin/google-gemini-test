@@ -202,7 +202,7 @@ def main():
                 input_prompt = st.text_input("Type your question here:")
                 input_prompt = str(
                     f"""
-                        Question: {input_prompt} and additional information can be found here: {df}
+                        Question: {input_prompt} based on the information here: {df}
                     """
                 )
 
