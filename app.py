@@ -200,11 +200,18 @@ def main():
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:")
-                input_prompt = str(
-                    f"""
-                        Question: {input_prompt} based on the information here: {df}
-                    """
-                )
+                if input_method == "Upload":
+                    input_prompt = str(
+                        f"""
+                            Answer the question: {input_prompt}
+                        """
+                    )
+                else:
+                    input_prompt = str(
+                        f"""
+                            Question: {input_prompt} based on the information here: {df}
+                        """
+                    )
 
                 # Display the entered question
                 if input_prompt:
