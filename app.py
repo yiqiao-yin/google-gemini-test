@@ -203,13 +203,13 @@ def main():
                 if input_method == "Upload":
                     input_prompt = str(
                         f"""
-                            Answer the question: {input_prompt}
+                            Question: {input_prompt} based on the information here: {df}
                         """
                     )
                 else:
                     input_prompt = str(
                         f"""
-                            Question: {input_prompt} based on the information here: {df}
+                            Answer the question: {input_prompt}
                         """
                     )
 
