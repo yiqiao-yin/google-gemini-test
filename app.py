@@ -198,25 +198,6 @@ def main():
                     "text"
                 ]
                 st.write(text_from_response)
-                st.write("### Auto-playing Audio!")
-                tts = gTTS(text_from_response, lang='en')
-                audio_buffer = io.BytesIO()
-                tts.save(audio_buffer)
-                audio_bytes = audio_buffer.getvalue()
-                mymidia_placeholder = st.empty()
-
-                mymidia_str = "data:audio/ogg;base64,%s"%(base64.b64encode(audio_bytes).decode())
-                mymidia_html = """
-                                <audio autoplay class="stAudio">
-                                <source src="%s" type="audio/ogg">
-                                Your browser does not support the audio element.
-                                </audio>
-                            """%mymidia_str
-
-                mymidia_placeholder.empty()
-                mymidia_placeholder.markdown(mymidia_html, unsafe_allow_html=True)
-
-
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:")
