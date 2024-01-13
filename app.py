@@ -199,7 +199,11 @@ def main():
                 ]
                 st.write(text_from_response)
                 st.write("### Auto-playing Audio!")
-                audio_base64 = base64.b64encode(text_from_response).decode('utf-8')
+                tts = gTTS(text_from_response, lang='en')
+                audio_buffer = io.BytesIO()
+                tts.save(audio_buffer)
+                audio_bytes = audio_buffer.getvalue()
+                audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
                 audio_tag = f'<audio autoplay="true" src="data:audio/wav;base64,{audio_base64}">'
                 st.markdown(audio_tag, unsafe_allow_html=True)
 
