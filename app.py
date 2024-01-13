@@ -1,4 +1,5 @@
 import base64
+from gtts import gTTS
 import io
 import json
 import os
@@ -27,22 +28,6 @@ def convert_image_to_base64(image):
     buffered = io.BytesIO()
     image.save(buffered, format="JPEG")
     return base64.b64encode(buffered.getvalue()).decode()
-
-
-# Function to create an mp3 audio file
-def autoplay_audio(file_path: str):
-    with open(file_path, "rb") as f:
-        data = f.read()
-        b64 = base64.b64encode(data).decode()
-        md = f"""
-            <audio controls autoplay="true">
-            <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-            </audio>
-            """
-        st.markdown(
-            md,
-            unsafe_allow_html=True,
-        )
 
 
 # Function to make an API call to Google's Gemini API
@@ -214,7 +199,26 @@ def main():
                 ]
                 st.write(text_from_response)
                 st.write("# Auto-playing Audio!")
-                autoplay_audio("local_audio.mp3")
+
+                # Generate audio from text using gTTS
+                tts = gTTS(text_from_response, lang="en")
+
+                # Save the generated audio to a BytesIO object
+                audio_buffer = io.BytesIO()
+                tts.save(audio_buffer)
+                audio_bytes = audio_buffer.getvalue()
+
+                # Encode the audio in base64
+                audio_base64 = base64.b64encode(audio_bytes).decode()
+
+                # Create a Streamlit app
+                st.title("Text-to-Speech App")
+
+                # Display the audio with autoplay using st.markdown
+                st.markdown(
+                    f'<audio controls autoplay><source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3"></audio>',
+                    unsafe_allow_html=True,
+                )
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:")
