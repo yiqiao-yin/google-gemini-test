@@ -204,8 +204,15 @@ def main():
                 tts.save(audio_buffer)
                 audio_bytes = audio_buffer.getvalue()
                 audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
-                audio_tag = f'<audio autoplay="true" src="data:audio/wav;base64,{audio_base64}">'
-                st.markdown(audio_tag, unsafe_allow_html=True)
+                md = f"""
+                    <audio autoplay="true">
+                    <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+                    </audio>
+                    """
+                st.markdown(
+                    md,
+                    unsafe_allow_html=True,
+                )
 
 
                 # Text input for the question
