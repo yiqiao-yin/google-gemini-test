@@ -199,26 +199,10 @@ def main():
                 ]
                 st.write(text_from_response)
                 st.write("### Auto-playing Audio!")
+                audio_base64 = base64.b64encode(text_from_response).decode('utf-8')
+                audio_tag = f'<audio autoplay="true" src="data:audio/wav;base64,{audio_base64}">'
+                st.markdown(audio_tag, unsafe_allow_html=True)
 
-                # Generate audio from text using gTTS
-                tts = gTTS(text_from_response, lang="en")
-
-                # Save the generated audio to a BytesIO object
-                audio_buffer = io.BytesIO()
-                tts.save(audio_buffer)
-                audio_bytes = audio_buffer.getvalue()
-
-                # Encode the audio in base64
-                audio_base64 = base64.b64encode(audio_bytes).decode()
-
-                # Create a Streamlit app
-                st.title("### Text-to-Speech App")
-
-                # Display the audio with autoplay using st.markdown
-                st.markdown(
-                    f'<audio controls autoplay><source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3"></audio>',
-                    unsafe_allow_html=True,
-                )
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:")
