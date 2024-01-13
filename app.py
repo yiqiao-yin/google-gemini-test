@@ -219,7 +219,7 @@ def main():
                     f'<audio controls autoplay><source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3"></audio>',
                     unsafe_allow_html=True,
                 )
-                st.audio(audio_buffer, format="audio/mp3")
+                st.audio(audio_base64, format="audio/mp3")
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:")
