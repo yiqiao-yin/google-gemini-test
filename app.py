@@ -206,7 +206,7 @@ def main():
                 audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
                 md = f"""
                     <audio autoplay="true">
-                    <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+                    <source src="data:audio/mp3;base64,{audio_bytes}" type="audio/mp3">
                     </audio>
                     """
                 st.markdown(
