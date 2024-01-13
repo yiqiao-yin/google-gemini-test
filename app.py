@@ -29,6 +29,22 @@ def convert_image_to_base64(image):
     return base64.b64encode(buffered.getvalue()).decode()
 
 
+# Function to create an mp3 audio file
+def autoplay_audio(file_path: str):
+    with open(file_path, "rb") as f:
+        data = f.read()
+        b64 = base64.b64encode(data).decode()
+        md = f"""
+            <audio controls autoplay="true">
+            <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+            </audio>
+            """
+        st.markdown(
+            md,
+            unsafe_allow_html=True,
+        )
+
+
 # Function to make an API call to Google's Gemini API
 def call_gemini_api(image_base64, api_key, prompt="What is this picture?"):
     headers = {
@@ -197,6 +213,8 @@ def main():
                     "text"
                 ]
                 st.write(text_from_response)
+                st.write("# Auto-playing Audio!")
+                autoplay_audio("local_audio.mp3")
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:")
