@@ -133,10 +133,28 @@ def extract_line_items(input_data: Dict[str, Any]) -> List[Dict[str, Any]]:
     return line_items
 
 
-def rag(query, retrieved_documents, api_key=api_key):
+def rag(query: str, retrieved_documents: list, api_key: str = api_key) -> str:
+    """
+    Function to process a query and a list of retrieved documents using the Gemini API.
+
+    Args:
+    query (str): The user's query or question.
+    retrieved_documents (list): A list of documents retrieved as relevant information to the query.
+    api_key (str): API key for accessing the Gemini API. Default is a predefined 'api_key'.
+
+    Returns:
+    str: The cleaned output from the Gemini API response.
+    """
+    # Combine the retrieved documents into a single string, separated by two newlines.
     information = "\n\n".join(retrieved_documents)
+
+    # Format the query and combined information into a single message.
     messages = f"Question: {query}. \n Information: {information}"
+
+    # Call the Gemini API with the formatted message and the API key.
     gemini_output = call_gemini_api(api_key, prompt=messages)
+
+    # Placeholder for processing the Gemini output. Currently, it simply assigns the raw output to 'cleaned_output'.
     cleaned_output = gemini_output  # ["candidates"][0]["content"]["parts"][0]["text"]
 
     return cleaned_output
@@ -144,7 +162,7 @@ def rag(query, retrieved_documents, api_key=api_key):
 
 # Main function of the Streamlit app
 def main():
-    st.title("Image Capture, Analysis and Save Application")
+    st.title("Analyzing Image/Document Using Generative AI")
 
     # Dropdown for user to choose the input method
     input_method = st.sidebar.selectbox(
