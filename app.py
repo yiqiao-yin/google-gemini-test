@@ -147,7 +147,9 @@ def main():
     st.title("Image Capture, Analysis and Save Application")
 
     # Dropdown for user to choose the input method
-    input_method = st.sidebar.selectbox("Choose input method:", ["Camera", "Upload"])
+    input_method = st.sidebar.selectbox(
+        "Choose input method:", ["Camera", "Upload Image", "Upload PDF"]
+    )
 
     if input_method == "Camera":
         # Streamlit widget to capture an image from the user's webcam
