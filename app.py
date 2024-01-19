@@ -43,7 +43,7 @@ def convert_image_to_base64(image):
 
 
 # Function to make an API call to Google's Gemini API
-def call_gemini_api(image_base64, api_key, prompt="What is this picture?"):
+def call_gemini_api(image_base64, api_key=api_key, prompt="What is this picture?"):
     headers = {
         "Content-Type": "application/json",
     }
