@@ -10,6 +10,18 @@ import requests
 import streamlit as st
 from PIL import Image
 
+from pypdf import PdfReader
+from langchain.text_splitter import (
+    RecursiveCharacterTextSplitter,
+    SentenceTransformersTokenTextSplitter,
+)
+import chromadb
+from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
+
+
+# API Key (You should set this in your environment variables)
+api_key = st.secrets["PALM_API_KEY"]
+
 
 # Function to convert the image to bytes for download
 def convert_image_to_bytes(image):
@@ -121,6 +133,15 @@ def extract_line_items(input_data: Dict[str, Any]) -> List[Dict[str, Any]]:
     return line_items
 
 
+def rag(query, retrieved_documents, api_key=api_key):
+    information = "\n\n".join(retrieved_documents)
+    messages = f"Question: {query}. \n Information: {information}"
+    gemini_output = call_gemini_api(api_key, prompt=messages)
+    cleaned_output = gemini_output["candidates"][0]["content"]["parts"][0]["text"]
+
+    return cleaned_output
+
+
 # Main function of the Streamlit app
 def main():
     st.title("Image Capture, Analysis and Save Application")
@@ -131,9 +152,12 @@ def main():
     if input_method == "Camera":
         # Streamlit widget to capture an image from the user's webcam
         image = st.sidebar.camera_input("Take a picture 📸")
-    elif input_method == "Upload":
+    elif input_method == "Upload Image":
         # Create a file uploader in the sidebar
         image = st.sidebar.file_uploader("Upload a JPG image", type=["jpg"])
+    elif input_method == "Upload PDF":
+        # File uploader widget
+        uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 
     # Add instruction
     st.sidebar.markdown(
@@ -170,7 +194,7 @@ def main():
         image_base64 = convert_image_to_base64(resized_image)
 
         # OCR by API Call of AWS Textract via Post Method
-        if input_method == "Upload":
+        if input_method == "Upload Image":
             url = "https://2tsig211e0.execute-api.us-east-1.amazonaws.com/my_textract"
             payload = {"image": image_base64}
             result_dict = post_request_and_parse_response(url, payload)
@@ -184,9 +208,6 @@ def main():
             # Using an expander to hide the table
             with st.expander("Show/Hide Table"):
                 st.table(df)
-
-        # API Key (You should set this in your environment variables)
-        api_key = st.secrets["PALM_API_KEY"]
 
         if api_key:
             # Make API call
@@ -235,6 +256,63 @@ def main():
                 st.write("No response from API.")
         else:
             st.write("API Key is not set. Please set the API Key.")
+
+    # File uploader widget
+    if uploaded_file is not None:
+        # To read file as bytes:
+        bytes_data = uploaded_file.getvalue()
+        st.success("Your PDF is uploaded successfully.")
+
+        # Get the file name
+        file_name = uploaded_file.name
+
+        # Save the file temporarily
+        with open(file_name, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+
+        # Read file
+        reader = PdfReader(file_name)
+        pdf_texts = [p.extract_text().strip() for p in reader.pages]
+
+        # Filter the empty strings
+        pdf_texts = [text for text in pdf_texts if text]
+        st.success("PDF extracted successfully.")
+
+        # Split the texts
+        character_splitter = RecursiveCharacterTextSplitter(
+            separators=["\n\n", "\n", ". ", " ", ""], chunk_size=1000, chunk_overlap=0
+        )
+        character_split_texts = character_splitter.split_text("\n\n".join(pdf_texts))
+        st.success("Texts splitted successfully.")
+
+        # Tokenize it
+        st.warning("Start tokenzing ...")
+        token_splitter = SentenceTransformersTokenTextSplitter(
+            chunk_overlap=0, tokens_per_chunk=256
+        )
+        token_split_texts = []
+        for text in character_split_texts:
+            token_split_texts += token_splitter.split_text(text)
+        st.success("Tokenized successfully.")
+
+        # Add to vector database
+        embedding_function = SentenceTransformerEmbeddingFunction()
+        chroma_client = chromadb.Client()
+        chroma_collection = chroma_client.create_collection(
+            "tmp", embedding_function=embedding_function
+        )
+        ids = [str(i) for i in range(len(token_split_texts))]
+        chroma_collection.add(ids=ids, documents=token_split_texts)
+        st.success("Vector database loaded successfully.")
+
+        # User input
+        query = st.text_input("Ask me anything!", "What is the document about?")
+        results = chroma_collection.query(query_texts=[query], n_results=5)
+        retrieved_documents = results["documents"][0]
+
+        # API of a foundation model
+        output = rag(query=query, retrieved_documents=retrieved_documents)
+        st.write(output)
 
 
 if __name__ == "__main__":
