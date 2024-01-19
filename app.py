@@ -159,7 +159,7 @@ def main():
         image = st.sidebar.file_uploader("Upload a JPG image", type=["jpg"])
     elif input_method == "Upload PDF":
         # File uploader widget
-        image = st.file_uploader("Choose a PDF file", type="pdf")
+        image = st.sidebar.file_uploader("Choose a PDF file", type="pdf")
 
     # Add instruction
     st.sidebar.markdown(
