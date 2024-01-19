@@ -151,6 +151,7 @@ def main():
         "Choose input method:", ["Camera", "Upload Image", "Upload PDF"]
     )
 
+    uploaded_file = None
     if input_method == "Camera":
         # Streamlit widget to capture an image from the user's webcam
         image = st.sidebar.camera_input("Take a picture 📸")
@@ -159,7 +160,7 @@ def main():
         image = st.sidebar.file_uploader("Upload a JPG image", type=["jpg"])
     elif input_method == "Upload PDF":
         # File uploader widget
-        image = st.sidebar.file_uploader("Choose a PDF file", type="pdf")
+        uploaded_file = st.sidebar.file_uploader("Choose a PDF file", type="pdf")
 
     # Add instruction
     st.sidebar.markdown(
@@ -260,8 +261,7 @@ def main():
             st.write("API Key is not set. Please set the API Key.")
 
     # File uploader widget
-    if image is not None:
-        uploaded_file = image
+    if uploaded_file is not None:
         # To read file as bytes:
         bytes_data = uploaded_file.getvalue()
         st.success("Your PDF is uploaded successfully.")
