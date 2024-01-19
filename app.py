@@ -137,7 +137,7 @@ def rag(query, retrieved_documents, api_key=api_key):
     information = "\n\n".join(retrieved_documents)
     messages = f"Question: {query}. \n Information: {information}"
     gemini_output = call_gemini_api(api_key, prompt=messages)
-    cleaned_output = gemini_output["candidates"][0]["content"]["parts"][0]["text"]
+    cleaned_output = gemini_output  # ["candidates"][0]["content"]["parts"][0]["text"]
 
     return cleaned_output
 
@@ -289,24 +289,25 @@ def main():
         st.success("Texts splitted successfully.")
 
         # Tokenize it
-        st.warning("Start tokenzing ...")
-        token_splitter = SentenceTransformersTokenTextSplitter(
-            chunk_overlap=0, tokens_per_chunk=256
-        )
-        token_split_texts = []
-        for text in character_split_texts:
-            token_split_texts += token_splitter.split_text(text)
-        st.success("Tokenized successfully.")
+        with st.spinner("Wait for it..."):
+            st.warning("Start tokenzing ...")
+            token_splitter = SentenceTransformersTokenTextSplitter(
+                chunk_overlap=0, tokens_per_chunk=256
+            )
+            token_split_texts = []
+            for text in character_split_texts:
+                token_split_texts += token_splitter.split_text(text)
+            st.success("Tokenized successfully.")
 
-        # Add to vector database
-        embedding_function = SentenceTransformerEmbeddingFunction()
-        chroma_client = chromadb.Client()
-        chroma_collection = chroma_client.create_collection(
-            "tmp", embedding_function=embedding_function
-        )
-        ids = [str(i) for i in range(len(token_split_texts))]
-        chroma_collection.add(ids=ids, documents=token_split_texts)
-        st.success("Vector database loaded successfully.")
+            # Add to vector database
+            embedding_function = SentenceTransformerEmbeddingFunction()
+            chroma_client = chromadb.Client()
+            chroma_collection = chroma_client.create_collection(
+                "tmp", embedding_function=embedding_function
+            )
+            ids = [str(i) for i in range(len(token_split_texts))]
+            chroma_collection.add(ids=ids, documents=token_split_texts)
+            st.success("Vector database loaded successfully.")
 
         # User input
         query = st.text_input("Ask me anything!", "What is the document about?")
