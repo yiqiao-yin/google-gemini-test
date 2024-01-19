@@ -157,7 +157,7 @@ def main():
         image = st.sidebar.file_uploader("Upload a JPG image", type=["jpg"])
     elif input_method == "Upload PDF":
         # File uploader widget
-        uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
+        image = st.file_uploader("Choose a PDF file", type="pdf")
 
     # Add instruction
     st.sidebar.markdown(
@@ -258,7 +258,8 @@ def main():
             st.write("API Key is not set. Please set the API Key.")
 
     # File uploader widget
-    if uploaded_file is not None:
+    if image is not None:
+        uploaded_file = image
         # To read file as bytes:
         bytes_data = uploaded_file.getvalue()
         st.success("Your PDF is uploaded successfully.")
