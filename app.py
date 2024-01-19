@@ -1,5 +1,4 @@
 import base64
-from gtts import gTTS
 import io
 import json
 import os
@@ -9,7 +8,7 @@ import pandas as pd
 import requests
 import streamlit as st
 from PIL import Image
-
+import google.generativeai as palm
 from pypdf import PdfReader
 from langchain.text_splitter import (
     RecursiveCharacterTextSplitter,
@@ -21,6 +20,7 @@ from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunct
 
 # API Key (You should set this in your environment variables)
 api_key = st.secrets["PALM_API_KEY"]
+palm.configure(api_key=api_key)
 
 
 # Function to convert the image to bytes for download
@@ -40,6 +40,18 @@ def convert_image_to_base64(image):
     buffered = io.BytesIO()
     image.save(buffered, format="JPEG")
     return base64.b64encode(buffered.getvalue()).decode()
+
+
+# Function to make an API call to Palm
+def call_palm(prompt: str) -> str:
+    completion = palm.generate_text(
+        model="models/text-bison-001",
+        prompt=prompt,
+        temperature=0,
+        max_output_tokens=800,
+    )
+
+    return completion.result
 
 
 # Function to make an API call to Google's Gemini API
@@ -152,7 +164,7 @@ def rag(query: str, retrieved_documents: list, api_key: str = api_key) -> str:
     messages = f"Question: {query}. \n Information: {information}"
 
     # Call the Gemini API with the formatted message and the API key.
-    gemini_output = call_gemini_api(api_key, prompt=messages)
+    gemini_output = call_palm(prompt=messages)
 
     # Placeholder for processing the Gemini output. Currently, it simply assigns the raw output to 'cleaned_output'.
     cleaned_output = gemini_output  # ["candidates"][0]["content"]["parts"][0]["text"]
