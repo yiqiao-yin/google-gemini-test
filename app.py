@@ -151,7 +151,7 @@ def main():
         "Choose input method:", ["Camera", "Upload Image", "Upload PDF"]
     )
 
-    uploaded_file = None
+    image, uploaded_file = None, None
     if input_method == "Camera":
         # Streamlit widget to capture an image from the user's webcam
         image = st.sidebar.camera_input("Take a picture 📸")
