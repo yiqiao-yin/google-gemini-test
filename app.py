@@ -49,19 +49,18 @@ def main():
         """
             # 🌟 How to Use the App 🌟
 
-            Follow these simple steps to interact with the app and have a chat with Gemini about your picture:
+            1) **🌈 User Input Magic**:
+            - 📸 **Camera Snap**: Tap to capture a moment with your device's camera. Say cheese!
+            - 🖼️ **Image Upload Extravaganza**: Got a cool pic? Upload it from your computer and let the magic begin!
+            - 📄 **PDF Adventure**: Share your PDFs with us. It's like opening a treasure chest of information!
 
-            1. **Capture a Moment** 📸
-            - Go to the **sidebar**.
-            - Use dropdown selection to **"Take a picture"** to capture an image using your webcam or **"Upload a file"** from your computer.
+            2) **🤖 AI Interaction Wonderland**:
+            - 🌟 **Gemini's AI Sparkle**: Google's Gemini AI is your companion, ready to dive deep into your uploads.
+            - 🌐 **Chroma Database Voyage**: As you upload, we're crafting a colorful Chroma database in our secret lab, making your interaction even more awesome!
 
-            2. **Gemini's Insight** 🔮
-            - Once you've taken a picture, just wait a moment.
-            - See what **Google's Gemini** AI has to say about your photo as the app processes it.
-
-            3. **Chat with Gemini** 💬
-            - Feel free to ask questions or start a conversation about the picture you just took.
-            - Let's see what interesting stories Gemini can tell you!
+            3) **💬 Chit-Chat with AI Post-Upload**:
+            - 🌍 Once your cosmic content is up in the app universe, ask away! Any question, any time.
+            - 💡 Light up the conversation with Gemini AI. It is like having a chat with a wise wizard from the digital realm!
 
             Enjoy exploring and have fun! 😄🎉
         """
