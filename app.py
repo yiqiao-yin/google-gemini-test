@@ -102,7 +102,8 @@ def main():
                 text_from_response = response["candidates"][0]["content"]["parts"][0][
                     "text"
                 ]
-                st.write(text_from_response)
+                with st.spinner('Wait for it...'):
+                    st.write(text_from_response)
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:", )
@@ -123,7 +124,8 @@ def main():
                         updated_ans = updated_text_from_response["candidates"][0][
                             "content"
                         ]["parts"][0]["text"]
-                        st.write(f"Gemini: {updated_ans}")
+                        with st.spinner('Wait for it...'):
+                            st.write(f"Gemini: {updated_ans}")
                     else:
                         st.warning("Check gemini's API.")
 
