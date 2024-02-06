@@ -106,6 +106,11 @@ def main():
 
                 # Text input for the question
                 input_prompt = st.text_input("Type your question here:", "What's the city name?")
+                input_prompt = f"""
+                    Try answer user's question {input_prompt}
+
+                    If there's not a confident answer, then say 'We don't have an answer with high confidence'. 
+                """
 
                 # Display the entered question
                 if input_prompt:
