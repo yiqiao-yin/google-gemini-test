@@ -52,14 +52,14 @@ def main():
             1) **🌈 User Input Magic**:
             - 📸 **Camera Snap**: Tap to capture a moment with your device's camera. Say cheese!
             - 🖼️ **Image Upload Extravaganza**: Got a cool pic? Upload it from your computer and let the magic begin!
-            - 📄 **PDF Adventure**: Share your PDFs with us. It's like opening a treasure chest of information!
+            - 📄 **PDF Adventure**: Use gen AI as ctrl+F to search information on any PDF, like opening a treasure chest of information!
 
             2) **🤖 AI Interaction Wonderland**:
-            - 🌟 **Gemini's AI Sparkle**: Google's Gemini AI is your companion, ready to dive deep into your uploads.
-            - 🌐 **Chroma Database Voyage**: As you upload, we're crafting a colorful Chroma database in our secret lab, making your interaction even more awesome!
+            - 🌟 **Gemini's AI**: Google's Gemini AI is your companion, ready to dive deep into your uploads.
+            - 🌐 **Chroma Database**: As you upload, we're crafting a colorful Chroma database in our secret lab, making your interaction even more awesome!
 
             3) **💬 Chit-Chat with AI Post-Upload**:
-            - 🌍 Once your cosmic content is up in the app universe, ask away! Any question, any time.
+            - 🌍 Once your content is up in the app, ask away! Any question, any time.
             - 💡 Light up the conversation with Gemini AI. It is like having a chat with a wise wizard from the digital realm!
 
             Enjoy exploring and have fun! 😄🎉
