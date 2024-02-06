@@ -122,9 +122,9 @@ def main():
                         updated_ans = updated_text_from_response["candidates"][0][
                             "content"
                         ]["parts"][0]["text"]
-                        st.write("Gemini:", updated_ans)
+                        st.markdown(f"### Gemini: {updated_ans}")
                     else:
-                        st.write("Check gemini's API.")
+                        st.warning("Check gemini's API.")
 
             else:
                 st.write("No response from API.")
