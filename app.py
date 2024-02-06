@@ -113,11 +113,11 @@ def main():
                         image_base64, api_key, prompt=input_prompt
                     )
 
-                    updated_text_from_response = updated_text_from_response[
-                        "candidates"
-                    ][0]["content"]["parts"][0]["text"]
-                    text = safely_get_text(updated_text_from_response)
-                    if text is not None:
+                    # updated_text_from_response = updated_text_from_response[
+                    #     "candidates"
+                    # ][0]["content"]["parts"][0]["text"]
+                    # text = safely_get_text(updated_text_from_response)
+                    if updated_text_from_response is not None:
                         # Do something with the text
                         updated_ans = updated_text_from_response["candidates"][0][
                             "content"
