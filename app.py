@@ -135,6 +135,8 @@ def main():
                             "content"
                         ]["parts"][0]["text"]
                         st.write("Gemini:", updated_ans)
+                    else:
+                        print("Check gemini's API.")
 
             else:
                 st.write("No response from API.")
