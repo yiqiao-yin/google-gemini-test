@@ -26,7 +26,7 @@ palm.configure(api_key=api_key)
 
 # Main function of the Streamlit app
 def main():
-    st.title("Analyzing Image/Document Using Generative AI")
+    st.title("Generative AI Demo on Camera Input/Image/PDF 💻")
 
     # Dropdown for user to choose the input method
     input_method = st.sidebar.selectbox(
