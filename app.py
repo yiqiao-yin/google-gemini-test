@@ -121,7 +121,6 @@ def main():
 
                 # Display the entered question
                 if input_prompt:
-                    input_prompt =
                     updated_text_from_response = call_gemini_api(
                         image_base64, api_key, prompt=input_prompt
                     )
