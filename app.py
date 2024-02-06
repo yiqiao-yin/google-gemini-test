@@ -105,7 +105,7 @@ def main():
                 st.write(text_from_response)
 
                 # Text input for the question
-                input_prompt = st.text_input("Type your question here:", "What's the city name?")
+                input_prompt = st.text_input("Type your question here:", )
                 input_prompt = f"""
                     Try answer user's question {input_prompt}
 
@@ -118,16 +118,12 @@ def main():
                         image_base64, api_key, prompt=input_prompt
                     )
 
-                    # updated_text_from_response = updated_text_from_response[
-                    #     "candidates"
-                    # ][0]["content"]["parts"][0]["text"]
-                    # text = safely_get_text(updated_text_from_response)
                     if updated_text_from_response is not None:
                         # Do something with the text
                         updated_ans = updated_text_from_response["candidates"][0][
                             "content"
                         ]["parts"][0]["text"]
-                        st.markdown(f"### Gemini: {updated_ans}")
+                        st.write(f"Gemini: {updated_ans}")
                     else:
                         st.warning("Check gemini's API.")
 
