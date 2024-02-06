@@ -109,7 +109,7 @@ def main():
                 input_prompt = f"""
                     Try answer user's question {input_prompt}
 
-                    If there's not a confident answer, then say 'We don't have an answer with high confidence'. 
+                    If there's not a confident answer, then add this in the end 'We recommend to verify the image because we do not have a confident answer'. 
                 """
 
                 # Display the entered question
