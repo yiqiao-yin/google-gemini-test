@@ -192,7 +192,13 @@ def main():
         query = st.text_input("Ask me anything!", "What is the document about?")
         results = chroma_collection.query(query_texts=[query], n_results=5)
         retrieved_documents = results["documents"][0]
-        results_as_table = pd.DataFrame(results)
+        results_as_table = pd.DataFrame(
+            {
+                "ids": results["ids"][0],
+                "documents": results["documents"][0],
+                "distances": results["distances"][0]
+            }
+        )
 
         # API of a foundation model
         output = rag(query=query, retrieved_documents=retrieved_documents)
