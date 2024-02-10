@@ -9,6 +9,7 @@ import requests
 import streamlit as st
 from PIL import Image
 import google.generativeai as palm
+import pandas as pd
 from pypdf import PdfReader
 from langchain.text_splitter import (
     RecursiveCharacterTextSplitter,
@@ -189,10 +190,15 @@ def main():
         query = st.text_input("Ask me anything!", "What is the document about?")
         results = chroma_collection.query(query_texts=[query], n_results=5)
         retrieved_documents = results["documents"][0]
+        results_ref = chroma_collection.similarity_search_with_score(query)
+        docs = results_ref
+        tmp_search_result_in_df = pd.DataFrame([[docs[i][0].page_content, docs[i][0].metadata['source'], docs[i][1]] for i in range(len(docs))])
+        tmp_search_result_in_df.columns = ['content', 'source', 'score']
 
         # API of a foundation model
         output = rag(query=query, retrieved_documents=retrieved_documents)
         st.write(output)
+        st.markdown(tmp_search_result_in_df.to_json())
 
 
 if __name__ == "__main__":
