@@ -198,6 +198,7 @@ def main():
         output = rag(query=query, retrieved_documents=retrieved_documents)
         st.write(output)
         st.success("Please see where the chatbot got the information from the document below.👇")
+        st.write(results)
         st.table(results_as_table)
 
 
