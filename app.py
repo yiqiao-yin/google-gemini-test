@@ -148,7 +148,7 @@ def main():
             f.write(uploaded_file.getbuffer())
         
         # Display PDF
-        displayPDF(file_name)
+        # displayPDF(file_name)
 
         # Read file
         reader = PdfReader(file_name)
