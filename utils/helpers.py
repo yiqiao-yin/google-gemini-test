@@ -170,3 +170,23 @@ def rag(query: str, retrieved_documents: list, api_key: str = api_key) -> str:
     cleaned_output = gemini_output  # ["candidates"][0]["content"]["parts"][0]["text"]
 
     return cleaned_output
+
+
+def displayPDF(file: str) -> None:
+    """
+    Displays a PDF file in a Streamlit application.
+
+    Parameters:
+    - file (str): The path to the PDF file to be displayed.
+    """
+
+    # Opening the PDF file in binary read mode
+    with open(file, "rb") as f:
+        # Encoding the PDF file content to base64
+        base64_pdf: str = base64.b64encode(f.read()).decode('utf-8')
+
+    # Creating an HTML embed string for displaying the PDF
+    pdf_display: str = F'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+
+    # Using Streamlit to display the HTML embed string as unsafe HTML
+    st.markdown(pdf_display, unsafe_allow_html=True)

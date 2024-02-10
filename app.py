@@ -146,6 +146,9 @@ def main():
         # Save the file temporarily
         with open(file_name, "wb") as f:
             f.write(uploaded_file.getbuffer())
+        
+        # Display PDF
+        displayPDF(file_name)
 
         # Read file
         reader = PdfReader(file_name)
