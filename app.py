@@ -192,11 +192,13 @@ def main():
         query = st.text_input("Ask me anything!", "What is the document about?")
         results = chroma_collection.query(query_texts=[query], n_results=5)
         retrieved_documents = results["documents"][0]
+        results_as_table = pd.DataFrame(results)
 
         # API of a foundation model
         output = rag(query=query, retrieved_documents=retrieved_documents)
         st.write(output)
-        st.markdown(f"#### Reference: {results}")
+        st.success("Please see where the chatbot got the information from the document below.👇")
+        st.table(results_as_table)
 
 
 if __name__ == "__main__":
