@@ -103,11 +103,13 @@ def main():
                 text_from_response = response["candidates"][0]["content"]["parts"][0][
                     "text"
                 ]
-                with st.spinner('Wait for it...'):
+                with st.spinner("Wait for it..."):
                     st.write(text_from_response)
 
                 # Text input for the question
-                input_prompt = st.text_input("Type your question here:", )
+                input_prompt = st.text_input(
+                    "Type your question here:",
+                )
                 input_prompt = f"""
                     Try answer user's question {input_prompt}
 
@@ -125,7 +127,7 @@ def main():
                         updated_ans = updated_text_from_response["candidates"][0][
                             "content"
                         ]["parts"][0]["text"]
-                        with st.spinner('Wait for it...'):
+                        with st.spinner("Wait for it..."):
                             st.write(f"Gemini: {updated_ans}")
                     else:
                         st.warning("Check gemini's API.")
@@ -147,7 +149,7 @@ def main():
         # Save the file temporarily
         with open(file_name, "wb") as f:
             f.write(uploaded_file.getbuffer())
-        
+
         # Display PDF
         # displayPDF(file_name)
 
@@ -190,15 +192,11 @@ def main():
         query = st.text_input("Ask me anything!", "What is the document about?")
         results = chroma_collection.query(query_texts=[query], n_results=5)
         retrieved_documents = results["documents"][0]
-        results_ref = chroma_collection.similarity_search_with_score(query)
-        docs = results_ref
-        tmp_search_result_in_df = pd.DataFrame([[docs[i][0].page_content, docs[i][0].metadata['source'], docs[i][1]] for i in range(len(docs))])
-        tmp_search_result_in_df.columns = ['content', 'source', 'score']
 
         # API of a foundation model
         output = rag(query=query, retrieved_documents=retrieved_documents)
         st.write(output)
-        st.markdown(tmp_search_result_in_df.to_json())
+        st.markdown(f"#### Reference: {results}")
 
 
 if __name__ == "__main__":
