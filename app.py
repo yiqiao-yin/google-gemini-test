@@ -111,12 +111,14 @@ def main():
             # Make API call
             response = call_gemini_api(image_base64, api_key)
 
+            with st.expander("Raw output from Gemini"):
+                st.write(response)
+
             # Display the response
-            if response: # ["candidates"][0]["content"]["parts"][0]["text"]
-                text_from_response = response
-                # ["candidates"][0]["content"]["parts"][0][
-                #     "text"
-                # ]
+            if response["candidates"][0]["content"]["parts"][0]["text"]:
+                text_from_response = response["candidates"][0]["content"]["parts"][0][
+                    "text"
+                ]
                 with st.spinner("Wait for it..."):
                     st.write(text_from_response)
 
