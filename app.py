@@ -19,6 +19,7 @@ import chromadb
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 
 from utils.helpers import *
+from utils.cnn_transformer import *
 
 # API Key (You should set this in your environment variables)
 api_key = st.secrets["PALM_API_KEY"]
@@ -93,6 +94,17 @@ def main():
             # Using an expander to hide the table
             with st.expander("Show/Hide Table"):
                 st.table(df)
+
+        # need
+        cnn_model = get_cnn_model()
+        encoder = TransformerEncoderBlock(embed_dim=EMBED_DIM, dense_dim=FF_DIM, num_heads=1)
+        decoder = TransformerDecoderBlock(embed_dim=EMBED_DIM, ff_dim=FF_DIM, num_heads=2)
+        newly_loaded_model = ImageCaptioningModel(
+            cnn_model=cnn_model,
+            encoder=encoder,
+            decoder=decoder,
+            image_aug=image_augmentation,
+        )
 
         if api_key:
             # Make API call
