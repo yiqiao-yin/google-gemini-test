@@ -113,9 +113,10 @@ def main():
 
             # Display the response
             if response: # ["candidates"][0]["content"]["parts"][0]["text"]
-                text_from_response = response["candidates"][0]["content"]["parts"][0][
-                    "text"
-                ]
+                text_from_response = response
+                # ["candidates"][0]["content"]["parts"][0][
+                #     "text"
+                # ]
                 with st.spinner("Wait for it..."):
                     st.write(text_from_response)
 
