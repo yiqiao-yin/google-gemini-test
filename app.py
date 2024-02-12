@@ -126,9 +126,6 @@ def main():
                 input_prompt = st.text_input(
                     "Type your question here:",
                 )
-                input_prompt = f"""
-                    Try answer user's question {input_prompt}
-                """
 
                 # Display the entered question
                 if input_prompt:
