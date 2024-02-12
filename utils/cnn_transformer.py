@@ -317,3 +317,63 @@ class ImageCaptioningModel(keras.Model):
         # We need to list our metrics here so the `reset_states()` can be
         # called automatically.
         return [self.loss_tracker, self.acc_tracker]
+
+
+
+strip_chars = "!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+strip_chars = strip_chars.replace("<", "")
+strip_chars = strip_chars.replace(">", "")
+
+
+def custom_standardization(input_string):
+    lowercase = tf.strings.lower(input_string)
+    return tf.strings.regex_replace(lowercase, "[%s]" % re.escape(strip_chars), "")
+
+
+vectorization = TextVectorization(
+    max_tokens=VOCAB_SIZE,
+    output_mode="int",
+    output_sequence_length=SEQ_LENGTH,
+    standardize=custom_standardization,
+)
+
+
+def generate_caption(caption_model: None):
+    # Select a random image from the validation dataset
+    # sample_img = np.random.choice(valid_images)
+
+    # # Read the image from the disk
+    # sample_img = decode_and_resize(sample_img)
+    # img = sample_img.numpy().clip(0, 255).astype(np.uint8)
+    # plt.imshow(img)
+    # plt.show()
+
+    # Pass the image to the CNN
+    # img = tf.expand_dims(sample_img, 0)
+    #TOOD 
+    img = None
+    img = caption_model.cnn_model(img)
+
+    # Pass the image features to the Transformer encoder
+    encoded_img = caption_model.encoder(img, training=False)
+
+    # Generate the caption using the Transformer decoder
+    decoded_caption = "<start> "
+    vocab = vectorization.get_vocabulary()
+    index_lookup = dict(zip(range(len(vocab)), vocab))
+    max_decoded_sentence_length = SEQ_LENGTH - 1
+    for i in range(max_decoded_sentence_length):
+        tokenized_caption = vectorization([decoded_caption])[:, :-1]
+        mask = tf.math.not_equal(tokenized_caption, 0)
+        predictions = caption_model.decoder(
+            tokenized_caption, encoded_img, training=False, mask=mask
+        )
+        sampled_token_index = np.argmax(predictions[0, i, :])
+        sampled_token = index_lookup[sampled_token_index]
+        if sampled_token == "<end>":
+            break
+        decoded_caption += " " + sampled_token
+
+    decoded_caption = decoded_caption.replace("<start> ", "")
+    decoded_caption = decoded_caption.replace(" <end>", "").strip()
+    print("Predicted Caption: ", decoded_caption)

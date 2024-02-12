@@ -96,15 +96,16 @@ def main():
                 st.table(df)
 
         # need
-        cnn_model = get_cnn_model()
-        encoder = TransformerEncoderBlock(embed_dim=EMBED_DIM, dense_dim=FF_DIM, num_heads=1)
-        decoder = TransformerDecoderBlock(embed_dim=EMBED_DIM, ff_dim=FF_DIM, num_heads=2)
-        newly_loaded_model = ImageCaptioningModel(
-            cnn_model=cnn_model,
-            encoder=encoder,
-            decoder=decoder,
-            image_aug=image_augmentation,
-        )
+        # cnn_model = get_cnn_model()
+        # encoder = TransformerEncoderBlock(embed_dim=EMBED_DIM, dense_dim=FF_DIM, num_heads=1)
+        # decoder = TransformerDecoderBlock(embed_dim=EMBED_DIM, ff_dim=FF_DIM, num_heads=2)
+        # newly_loaded_model = ImageCaptioningModel(
+        #     cnn_model=cnn_model,
+        #     encoder=encoder,
+        #     decoder=decoder,
+        #     image_aug=image_augmentation,
+        # )
+        # newly_loaded_model.load_weights('models/cnn_transformer/tf_keras_image_captioning_cnn+transformer_flicker8k')
 
         if api_key:
             # Make API call
