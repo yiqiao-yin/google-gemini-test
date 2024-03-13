@@ -4,26 +4,46 @@ import json
 import os
 from typing import Any, Dict, List
 
+import chromadb
+import google.generativeai as palm
 import pandas as pd
 import requests
 import streamlit as st
-from PIL import Image
-import google.generativeai as palm
-import pandas as pd
-from pypdf import PdfReader
+from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 from langchain.text_splitter import (
     RecursiveCharacterTextSplitter,
     SentenceTransformersTokenTextSplitter,
 )
-import chromadb
-from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
+from PIL import Image, ImageDraw, ImageFont
+from pypdf import PdfReader
+from transformers import pipeline
 
-from utils.helpers import *
 from utils.cnn_transformer import *
+from utils.helpers import *
 
 # API Key (You should set this in your environment variables)
 api_key = st.secrets["PALM_API_KEY"]
 palm.configure(api_key=api_key)
+
+
+# Load YOLO pipeline
+yolo_pipe = pipeline("object-detection", model="hustvl/yolos-small")
+
+
+# Function to draw bounding boxes and labels on image
+def draw_boxes(image, predictions):
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default()
+
+    for pred in predictions:
+        label = pred["label"]
+        score = pred["score"]
+        box = pred["box"]
+        xmin, ymin, xmax, ymax = box.values()
+        draw.rectangle([xmin, ymin, xmax, ymax], outline="red", width=2)
+        draw.text((xmin, ymin), f"{label} ({score:.2f})", fill="red", font=font)
+
+    return image
 
 
 # Main function of the Streamlit app
@@ -95,18 +115,6 @@ def main():
             with st.expander("Show/Hide Table"):
                 st.table(df)
 
-        # need
-        # cnn_model = get_cnn_model()
-        # encoder = TransformerEncoderBlock(embed_dim=EMBED_DIM, dense_dim=FF_DIM, num_heads=1)
-        # decoder = TransformerDecoderBlock(embed_dim=EMBED_DIM, ff_dim=FF_DIM, num_heads=2)
-        # newly_loaded_model = ImageCaptioningModel(
-        #     cnn_model=cnn_model,
-        #     encoder=encoder,
-        #     decoder=decoder,
-        #     image_aug=image_augmentation,
-        # )
-        # newly_loaded_model.load_weights('models/cnn_transformer/tf_keras_image_captioning_cnn+transformer_flicker8k')
-
         if api_key:
             # Make API call
             response = call_gemini_api(image_base64, api_key)
@@ -147,6 +155,24 @@ def main():
                 st.write("No response from API.")
         else:
             st.write("API Key is not set. Please set the API Key.")
+
+    # YOLO
+    if image is not None:
+        use_yolo = st.sidebar.checkbox("Use YOLO!", value=False)
+
+        if use_yolo:
+            # Process image with YOLO
+            image = Image.open(image)
+            with st.spinner("Wait for it..."):
+                predictions = yolo_pipe(image)
+                st.success("YOLO running successfully.")
+
+            # Draw bounding boxes and labels
+            image_with_boxes = draw_boxes(image.copy(), predictions)
+            st.success("Bounding boxes drawn.")
+
+            # Display annotated image
+            st.image(image_with_boxes, caption="Annotated Image", use_column_width=True)
 
     # File uploader widget
     if uploaded_file is not None:
@@ -207,14 +233,16 @@ def main():
             {
                 "ids": results["ids"][0],
                 "documents": results["documents"][0],
-                "distances": results["distances"][0]
+                "distances": results["distances"][0],
             }
         )
 
         # API of a foundation model
         output = rag(query=query, retrieved_documents=retrieved_documents)
         st.write(output)
-        st.success("Please see where the chatbot got the information from the document below.👇")
+        st.success(
+            "Please see where the chatbot got the information from the document below.👇"
+        )
         with st.expander("Raw query outputs:"):
             st.write(results)
         with st.expander("Processed tabular form query outputs:"):

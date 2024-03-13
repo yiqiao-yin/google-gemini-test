@@ -8,4 +8,6 @@ pypdf==3.17.1
 Pillow
 sentence-transformers==2.2.2
 streamlit
+transformers
+torch
 tensorflow
