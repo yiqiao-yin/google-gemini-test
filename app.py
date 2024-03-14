@@ -158,6 +158,7 @@ def main():
 
     # YOLO
     if image is not None:
+        st.sidebar.success("Check the following box to run YOLO algorithm if desired!")
         use_yolo = st.sidebar.checkbox("Use YOLO!", value=False)
 
         if use_yolo:
