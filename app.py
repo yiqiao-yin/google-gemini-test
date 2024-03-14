@@ -75,6 +75,7 @@ def main():
             - 📸 **Camera Snap**: Tap to capture a moment with your device's camera. Say cheese!
             - 🖼️ **Image Upload Extravaganza**: Got a cool pic? Upload it from your computer and let the magic begin!
             - 📄 **PDF Adventure**: Use gen AI as ctrl+F to search information on any PDF, like opening a treasure chest of information!
+            - 📄 **YOLO Algorithm**: Wanna detect the object in the image? Use our object detection algorithm to see if the objects can be detected.
 
             2) **🤖 AI Interaction Wonderland**:
             - 🌟 **Gemini's AI**: Google's Gemini AI is your companion, ready to dive deep into your uploads.
@@ -101,6 +102,7 @@ def main():
 
         # OCR by API Call of AWS Textract via Post Method
         if input_method == "Upload Image":
+            st.success("Running textract!")
             url = "https://2tsig211e0.execute-api.us-east-1.amazonaws.com/my_textract"
             payload = {"image": image_base64}
             result_dict = post_request_and_parse_response(url, payload)
@@ -117,7 +119,9 @@ def main():
 
         if api_key:
             # Make API call
-            response = call_gemini_api(image_base64, api_key)
+            st.success("Running Gemini!")
+            with st.spinner('Wait for it...'):
+                response = call_gemini_api(image_base64, api_key)
 
             with st.expander("Raw output from Gemini"):
                 st.write(response)
@@ -165,6 +169,7 @@ def main():
             # Process image with YOLO
             image = Image.open(image)
             with st.spinner("Wait for it..."):
+                st.success("Running YOLO algorithm!")
                 predictions = yolo_pipe(image)
                 st.success("YOLO running successfully.")
 
